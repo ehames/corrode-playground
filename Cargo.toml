@@ -1,0 +1,8 @@
+[package]
+name = "demo"
+version = "0.1.0"
+authors = ["Your Name <yourname@example.com>"]
+
+[dependencies]
+nickel = "0.8.1"
+tempfile = "*"
