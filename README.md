@@ -19,3 +19,7 @@ A web interface to test corrode (https://github.com/jameysharp/corrode)
    ```bash
    curl -X POST --data 'ccode=int main(){ return 0; }' http://localhost:6767/corrode
    ```
+
+## Authors
+  Edgardo Hames https://github.com/ehames
+  Francisco Ferreira https://github.com/fferreira
