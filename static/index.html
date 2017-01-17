@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Corrode Playground</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <style type="text/css" media="screen">
+        .ace_editor {
+            border: 1px solid lightgray;
+            margin: auto;
+            width: 90%;
+        }
+        
+        #left-column {
+            float: left;
+            width: 45%;
+        }
+
+        #middle-column {
+            text-align: center;
+            float: left;
+            width: 10%;
+        }
+
+        #right-column {
+            float: left;
+            width: 45%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container" style="height:100%;min-height:100%">
+        <header id="banner" class="body" style="text-align:center;">
+            <h1>Corrode Playground</h1>
+        </header>
+        <div id="left-column">
+            <pre id="editor1">type your C code here</pre>
+        </div>
+
+        <div id="middle-column">
+            <form action="http://localhost:6767/corrode" id="cform">
+                <input type="submit" value="Transpile!">
+            </form>
+        </div>
+
+        <div id="right-column">
+            <pre id="editor2">your rust code will appear here</pre>
+        </div>
+        <footer id="poweredby" class="body" style="text-align:center;">Powered by Bitlogic.io</footer>
+    </div>
+    <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var editor1 = ace.edit("editor1");
+        editor1.setTheme("ace/theme/github");
+        editor1.session.setMode("ace/mode/c_cpp");
+        editor1.setAutoScrollEditorIntoView(true);
+        editor1.setOption("maxLines", 30);
+        editor1.setOption("minLines", 5);
+
+        var editor2 = ace.edit("editor2");
+        editor2.setTheme("ace/theme/github");
+        editor2.session.setMode("ace/mode/rust");
+        editor2.setAutoScrollEditorIntoView(true);
+        editor2.setOption("maxLines", 30);
+        editor2.setOption("minLines", 5);
+        editor2.setReadOnly(true);
+    </script>
+
+    <script>
+        // Attach a submit handler to the form
+        $("#cform").submit(function(event) {
+
+            // Stop form from submitting normally
+            event.preventDefault();
+
+            // Get some values from elements on the page:
+            var $form = $(this),
+                url = $form.attr("action");
+            term = editor1.getValue();
+            // Send the data using post
+            var posting = $.post(url, {
+                ccode: term
+            });
+
+            // Put the results in a div
+            posting.done(function(data) {
+                var json = $.parseJSON(data);
+                console.log(json);
+                if (json.status == "Success") {
+                    editor2.setValue(json.rustcode);
+                } else {
+                    editor2.setValue("Compilation failed:\n" + json.error);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
