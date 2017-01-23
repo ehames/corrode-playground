@@ -16,7 +16,7 @@ A web interface to test corrode (https://github.com/jameysharp/corrode).
    cd $PROJDIR
    git clone https://github.com/ehames/corrode-playground
    cd corrode-playground
-   cargo build
+   ~/.cargo/bin/cargo build
 
    # copy binaries
    cp $PROJDIR/corrode/.stack-work/install/x86_64-linux/lts-6.6/7.10.3/bin/corrode .
