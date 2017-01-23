@@ -7,29 +7,41 @@
 
     <title>Corrode Playground</title>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</style>
     <style type="text/css" media="screen">
         .ace_editor {
             border: 1px solid lightgray;
             margin: auto;
             width: 90%;
         }
-        
-        #left-column {
-            float: left;
-            width: 45%;
-        }
 
         #middle-column {
             text-align: center;
-            float: left;
-            width: 10%;
+            margin-top: 15%;
         }
 
-        #right-column {
-            float: left;
-            width: 45%;
+        #c {
+            text-align: center;
         }
+
+        #editor1, #editor2 {
+            min-height: 300px;
+        }
+
+        #error-message {
+            display: none; 
+            max-width: 90%; 
+            margin-top: 15%;
+        }
+
+        #rust {
+            text-align: center;
+        }
+        
     </style>
 </head>
 
@@ -37,21 +49,28 @@
     <div id="container" style="height:100%;min-height:100%">
         <header id="banner" class="body" style="text-align:center;">
             <h1>Corrode Playground</h1>
-        </header>
-        <div id="left-column">
-            <pre id="editor1">type your C code here</pre>
+        </header> 
+        <div class="container"> 
+            <div class="row">               
+                <div id="left-column" class="col-sm-5">
+                    <h3 id="c">C</h3>
+                    <pre id="editor1">type your C code here</pre>
+                </div>
+                <div id="middle-column" class="col-sm-2">
+                    <form action="http://localhost:6767/corrode" id="cform">
+                        <input type="submit" value="Transpile!" class="btn btn-primary">
+                    </form>
+                </div>
+                <div id="right-column" class="col-sm-5">
+                    <div class="alert alert-danger" id="error-message"></div>
+                    <h3 id="rust">Rust</h3>
+                    <pre id="editor2">your rust code will appear here</pre>
+                </div>
+            </div>
         </div>
-
-        <div id="middle-column">
-            <form action="http://localhost:6767/corrode" id="cform">
-                <input type="submit" value="Transpile!">
-            </form>
-        </div>
-
-        <div id="right-column">
-            <pre id="editor2">your rust code will appear here</pre>
-        </div>
-        <footer id="poweredby" class="body" style="text-align:center;">Powered by Bitlogic.io</footer>
+        <footer id="poweredby" class="body" style="text-align:center; font-weight: bold">
+            Powered by <a target="_blank" href="http://bitlogic.io"><img src="images/logo.png"/></a>
+        </footer>
     </div>
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
@@ -93,8 +112,14 @@
                 console.log(json);
                 if (json.status == "Success") {
                     editor2.setValue(json.rustcode);
+                    $("#error-message").hide();
+                    $("#editor2").show();
+                    $("#rust").show();
                 } else {
-                    editor2.setValue("Compilation failed:\n" + json.error);
+                    $("#error-message").html("Compilation failed:<br />" + json.error);
+                    $("#error-message").show();
+                    $("#editor2").hide();
+                    $("#rust").hide();
                 }
             });
         });
